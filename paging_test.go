@@ -50,7 +50,7 @@ func TestPage(t *testing.T) {
 			name: "two-pages",
 			args: args[int]{
 				s:         []int{1, 2, 3, 4, 5, 6},
-				pageSize:  3:,
+				pageSize:  3,
 				pageIndex: 1,
 			},
 			want: []int{4, 5, 6},
