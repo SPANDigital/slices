@@ -1,9 +1,9 @@
 package slices
 
-func Filter[S ~[]V, V any](s S, filter func(V V) bool) []V {
+func Filter[S ~[]V, V any](s S, predicate func(V V) bool) []V {
 	out := make([]V, 0, len(s))
 	for _, v := range s {
-		if filter(v) {
+		if predicate(v) {
 			out = append(out, v)
 		}
 	}
