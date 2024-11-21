@@ -1,6 +1,11 @@
 # slices
 SPAN Digital Slices
 
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/SPANDigital/slices)
+![Develop Go Action Workflow Status](https://img.shields.io/github/actions/workflow/status/spandigital/slices/go.yml?branch=develop&label=develop)
+![Main Go Action Workflow Status](https://img.shields.io/github/actions/workflow/status/spandigital/slices/go.yml?branch=main&label=main)
+![Release status](https://img.shields.io/github/v/release/SPANDigital/slices)
+
 ## Usage
 
 Generic functions which operate on Go slices.
