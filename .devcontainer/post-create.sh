@@ -7,7 +7,10 @@ then
     exit 1
 fi
 
-. .env
+if [-f ".env"] 
+then 
+  . .env
+fi
 
 # Git Configuration
 git config --global --add safe.directory ${localWorkspaceFolder}
