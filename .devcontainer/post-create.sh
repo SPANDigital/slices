@@ -7,9 +7,7 @@ then
     exit 1
 fi
 
-source .env
-
-if !
+. .env
 
 # Git Configuration
 git config --global --add safe.directory ${localWorkspaceFolder}
