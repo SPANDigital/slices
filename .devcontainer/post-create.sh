@@ -21,4 +21,7 @@ git config --global user.email "${GITHUB_EMAIL}"
 . ${NVM_DIR}/nvm.sh
 nvm install --lts
 npm install -g @commitlint/cli @commitlint/config-conventional
+
+go install golang.org/x/tools/cmd/goimports@latest
+
 pre-commit install
