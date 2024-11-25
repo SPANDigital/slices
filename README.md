@@ -4,7 +4,7 @@ SPAN Digital Slices
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/SPANDigital/slices)
 ![Develop Go Action Workflow Status](https://img.shields.io/github/actions/workflow/status/spandigital/slices/go.yml?branch=develop&label=develop)
 ![Main Go Action Workflow Status](https://img.shields.io/github/actions/workflow/status/spandigital/slices/go.yml?branch=main&label=main)
-![Release status](https://img.shields.io/github/v/tag/SPANDigital/slices)
+![Tag](https://img.shields.io/github/v/tag/SPANDigital/slices)
 
 ## Usage
 
@@ -23,11 +23,11 @@ import (
 
 func main() {
 	a := []int{1, 2, 3, 4, 5, 6, 7, 8}
-	
+
 	b := slices.Filter(a, func(v int) bool {
         return v % 2 == 0 // even
 	})
-	
+
 	println(b) // 2, 4, 6, 8
 }
 ```
@@ -46,9 +46,9 @@ import (
 
 func main() {
 	a := [][]int{{1, 2, 3, 4}, {5, 6}, {7, 8}}
-	
+
 	b := slices.Flatten(a)
-	
+
 	println(b) // 1, 2, 3, 4, 5, 6, 7, 8
 }
 ```
@@ -96,7 +96,7 @@ func main() {
 
 	filtered := slices.FilterNil([]*exampleStruct{a, b, nil, c, nil})
 	println(len(filtered)) // 3
-}    
+}
 ```
 
 ### func Contains[S ~[]E, E comparable](s S, v E) bool
