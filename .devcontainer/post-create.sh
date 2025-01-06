@@ -7,7 +7,7 @@ then
     exit 1
 fi
 
-if [ -f ".env"]
+if [ -f ".env" ]
 then
   . .env
 fi
