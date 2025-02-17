@@ -85,6 +85,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	initializeScenarioForContains(ctx)
 	initializeScenarioForFilter(ctx)
 	initializeScenarioForFilterNil(ctx)
+	initializeScenarioForFlatten(ctx)
 }
 
 func TestFeatures(t *testing.T) {

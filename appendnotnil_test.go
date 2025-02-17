@@ -65,7 +65,7 @@ func theResultShouldBeASliceWithElements(ctx context.Context, t *godog.Table) (c
 	return ctx, nil
 }
 
-func theResultShouldBeAnEmptySlice(ctx context.Context) (context.Context, error) {
+func theResultShouldBeAnEmptySliceOfStringPtr(ctx context.Context) (context.Context, error) {
 	result, ok := ctx.Value(resultKey{}).([]*string)
 	if !ok {
 		return ctx, errors.New("result not found in context")
@@ -80,5 +80,5 @@ func initializeScenarioForAppendNotNil(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I call AppendNotNil on the slice with the following variable arguments$`, iCallAppendNotNilOnTheSliceWithTheFollowingVariableArguments)
 	ctx.Step(`^I call AppendNotNil on the slice$`, iCallAppendNotNilOnTheSlice)
 	ctx.Step(`^the result should be a string ptr slice with elements$`, theResultShouldBeASliceWithElements)
-	ctx.Step(`^the result should be an empty slice$`, theResultShouldBeAnEmptySlice)
+	ctx.Step(`^the result should be an empty slice of string ptr$`, theResultShouldBeAnEmptySliceOfStringPtr)
 }
