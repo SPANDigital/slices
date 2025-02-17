@@ -1,55 +1,22 @@
 package slices
 
 import (
-	"cmp"
-	"reflect"
-	"testing"
+	"context"
+	"errors"
+	"github.com/cucumber/godog"
 )
 
-func TestIntersection(t *testing.T) {
-	type args[T cmp.Ordered] struct {
-		pS [][]T
+func iCallIntersectionOnTheStringSlices(ctx context.Context) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([][]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	type testCase[T cmp.Ordered] struct {
-		name string
-		args args[T]
-		want []T
+	if len(firstArg) != 2 {
+		return ctx, errors.New("first arg must have two elements")
 	}
-	tests := []testCase[string]{
-		{
-			name: "empty",
-			args: args[string]{
-				pS: make([][]string, 0),
-			},
-			want: make([]string, 0),
-		},
-		{
-			name: "none-in-commons",
-			args: args[string]{
-				pS: [][]string{{"one", "two"}, {"three", "four"}},
-			},
-			want: make([]string, 0),
-		},
-		{
-			name: "one-in-commons",
-			args: args[string]{
-				pS: [][]string{{"one", "two", "common"}, {"common", "three", "four"}},
-			},
-			want: []string{"common"},
-		},
-		{
-			name: "two-in-commons",
-			args: args[string]{
-				pS: [][]string{{"one", "two", "common", "second-common"}, {"common", "second-common", "three", "four"}},
-			},
-			want: []string{"common", "second-common"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Intersection(tt.args.pS...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Intersection() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	return context.WithValue(ctx, resultKey{}, Intersection(firstArg...)), nil
+}
+
+func initializeScenarioForIntersection(ctx *godog.ScenarioContext) {
+	ctx.Step(`^I call Intersection on the slices$`, iCallIntersectionOnTheStringSlices)
 }

@@ -1,56 +1,19 @@
 package slices
 
-import "testing"
+import (
+	"context"
+	"errors"
+	"github.com/cucumber/godog"
+)
 
-func TestIndex(t *testing.T) {
-	type args[S interface{ ~[]E }, E comparable] struct {
-		s S
-		v E
+func iCallIndexOnTheStringSliceWithArgument(ctx context.Context, argument string) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	type testCase[S interface{ ~[]E }, E comparable] struct {
-		name string
-		args args[S, E]
-		want int
-	}
-	stringTests := []testCase[[]string, string]{
-		{
-			name: "present-at-0",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "a",
-			},
-			want: 0,
-		},
-		{
-			name: "present-at-1",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "b",
-			},
-			want: 1,
-		},
-		{
-			name: "present-at-2",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "c",
-			},
-			want: 2,
-		},
-		{
-			name: "not-present",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "z",
-			},
-			want: -1,
-		},
-	}
-	for _, tt := range stringTests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Index(tt.args.s, tt.args.v); got != tt.want {
-				t.Errorf("Index() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	return context.WithValue(ctx, resultKey{}, Index(firstArg, argument)), nil
+}
+
+func initializeScenarioForIndex(ctx *godog.ScenarioContext) {
+	ctx.Step(`^I call Index on the string slice with argument "([^"]*)"$`, iCallIndexOnTheStringSliceWithArgument)
 }
