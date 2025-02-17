@@ -12,7 +12,7 @@ Scenario: Append elements to a slice
     | "e"     |
     | nil     |
     | "f"     |
-  Then the result should be a slice with elements
+  Then the result should be a string ptr slice with elements
     | "a"     |
     | "b"     |
     | nil     |
@@ -29,7 +29,7 @@ Scenario: Append elements to a slice
       | "e"     |
       | nil     |
       | "f"     |
-    Then the result should be a slice with elements
+    Then the result should be a string ptr slice with elements
       | "d"     |
       | "e"     |
       | "f"     |
@@ -44,7 +44,7 @@ Scenario: Append elements to a slice
       | "y" |
       | nil |
       | "z" |
-    Then the result should be a slice with elements
+    Then the result should be a string ptr slice with elements
       | nil |
       | nil |
       | nil |

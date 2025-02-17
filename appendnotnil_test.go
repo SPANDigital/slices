@@ -89,6 +89,6 @@ func initializeScenarioForAppendNotNil(ctx *godog.ScenarioContext) {
 	ctx.Step(`^a string ptr slice with elements$`, aStringPtrSliceWithElements)
 	ctx.Step(`^I call AppendNotNil on the slice with the following variable arguments$`, iCallAppendNotNilOnTheSliceWithTheFollowingVariableArguments)
 	ctx.Step(`^I call AppendNotNil on the slice$`, iCallAppendNotNilOnTheSlice)
-	ctx.Step(`^the result should be a slice with elements$`, theResultShouldBeASliceWithElements)
+	ctx.Step(`^the result should be a string ptr slice with elements$`, theResultShouldBeASliceWithElements)
 	ctx.Step(`^the result should be an empty slice$`, theResultShouldBeAnEmptySlice)
 }

@@ -11,6 +11,7 @@ type resultKey struct{}
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	initializeScenarioForAppendNotNil(ctx)
 	initializeScenarioForContains(ctx)
+	initializeScenarioForFilter(ctx)
 }
 
 func TestFeatures(t *testing.T) {
