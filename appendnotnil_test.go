@@ -5,11 +5,7 @@ import (
 	"errors"
 	"github.com/cucumber/godog"
 	"regexp"
-	"testing"
 )
-
-type firstArgKey struct{}
-type resultKey struct{}
 
 var naiveStringPattern = regexp.MustCompile(`"([^"]*)"`)
 
@@ -35,7 +31,7 @@ func anEmptySlice(ctx context.Context) (context.Context, error) {
 	return context.WithValue(ctx, firstArgKey{}, []*string{}), nil
 }
 
-func aSliceWithElements(ctx context.Context, elements *godog.Table) (context.Context, error) {
+func aStringPtrSliceWithElements(ctx context.Context, elements *godog.Table) (context.Context, error) {
 	return context.WithValue(ctx, firstArgKey{}, tableToStringPtrSlice(elements)), nil
 }
 
@@ -88,26 +84,11 @@ func theResultShouldBeAnEmptySlice(ctx context.Context) (context.Context, error)
 	return ctx, nil
 }
 
-func InitializeScenario(ctx *godog.ScenarioContext) {
+func initializeScenarioForAppendNotNil(ctx *godog.ScenarioContext) {
 	ctx.Step(`^an empty slice$`, anEmptySlice)
-	ctx.Step(`^a slice with elements$`, aSliceWithElements)
+	ctx.Step(`^a string ptr slice with elements$`, aStringPtrSliceWithElements)
 	ctx.Step(`^I call AppendNotNil on the slice with the following variable arguments$`, iCallAppendNotNilOnTheSliceWithTheFollowingVariableArguments)
 	ctx.Step(`^I call AppendNotNil on the slice$`, iCallAppendNotNilOnTheSlice)
 	ctx.Step(`^the result should be a slice with elements$`, theResultShouldBeASliceWithElements)
 	ctx.Step(`^the result should be an empty slice$`, theResultShouldBeAnEmptySlice)
-}
-
-func TestFeatures(t *testing.T) {
-	suite := godog.TestSuite{
-		ScenarioInitializer: InitializeScenario,
-		Options: &godog.Options{
-			Format:   "pretty",
-			Paths:    []string{"features"},
-			TestingT: t, // Testing instance that will run subtests.
-		},
-	}
-
-	if suite.Run() != 0 {
-		t.Fatal("non-zero status returned, failed to run feature tests")
-	}
 }

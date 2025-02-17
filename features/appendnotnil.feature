@@ -1,7 +1,7 @@
 Feature: AppendNotNil
 
 Scenario: Append elements to a slice
-  Given a slice with elements
+  Given a string ptr slice with elements
     | "a"     |
     | "b"     |
     | nil     |
@@ -35,7 +35,7 @@ Scenario: Append elements to a slice
       | "f"     |
 
   Scenario: Append non-nil elements to a slice with all nil elements
-    Given a slice with elements
+    Given a string ptr slice with elements
       | nil     |
       | nil     |
       | nil     |
