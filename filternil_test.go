@@ -1,54 +1,20 @@
 package slices
 
 import (
-	"reflect"
-	"testing"
+	"context"
+	"errors"
+	"github.com/cucumber/godog"
 )
 
-func TestFilterNil(t *testing.T) {
-	type args[T any] struct {
-		in []*T
+func whenICallFilterNilOnTheStringPtrSlice(ctx context.Context) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]*string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	type testCase[T any] struct {
-		name    string
-		args    args[T]
-		wantOut []*T
-	}
-	tests := []testCase[string]{
-		{
-			name: "empty",
-			args: args[string]{
-				in: nil,
-			},
-			wantOut: make([]*string, 0),
-		},
-		{
-			name: "single-front",
-			args: args[string]{
-				in: []*string{nil, ptr("a")},
-			},
-			wantOut: []*string{ptr("a")},
-		},
-		{
-			name: "single-back",
-			args: args[string]{
-				in: []*string{ptr("a"), nil},
-			},
-			wantOut: []*string{ptr("a")},
-		},
-		{
-			name: "middle",
-			args: args[string]{
-				in: []*string{ptr("a"), nil, ptr("b")},
-			},
-			wantOut: []*string{ptr("a"), ptr("b")},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if gotOut := FilterNil(tt.args.in); !reflect.DeepEqual(gotOut, tt.wantOut) {
-				t.Errorf("FilterNil() = %v, want %v", gotOut, tt.wantOut)
-			}
-		})
-	}
+	result := FilterNil(firstArg)
+	return context.WithValue(ctx, resultKey{}, result), nil
+}
+
+func initializeScenarioForFilterNil(ctx *godog.ScenarioContext) {
+	ctx.Step(`^I call FilterNil on the string ptr slice$`, whenICallFilterNilOnTheStringPtrSlice)
 }

@@ -27,14 +27,6 @@ func tableToStringPtrSlice(t *godog.Table) []*string {
 	return out
 }
 
-func anEmptySlice(ctx context.Context) (context.Context, error) {
-	return context.WithValue(ctx, firstArgKey{}, []*string{}), nil
-}
-
-func aStringPtrSliceWithElements(ctx context.Context, elements *godog.Table) (context.Context, error) {
-	return context.WithValue(ctx, firstArgKey{}, tableToStringPtrSlice(elements)), nil
-}
-
 func iCallAppendNotNilOnTheSliceWithTheFollowingVariableArguments(ctx context.Context, varArgs *godog.Table) (context.Context, error) {
 	firstArg, ok := ctx.Value(firstArgKey{}).([]*string)
 	if !ok {
@@ -85,8 +77,6 @@ func theResultShouldBeAnEmptySlice(ctx context.Context) (context.Context, error)
 }
 
 func initializeScenarioForAppendNotNil(ctx *godog.ScenarioContext) {
-	ctx.Step(`^an empty slice$`, anEmptySlice)
-	ctx.Step(`^a string ptr slice with elements$`, aStringPtrSliceWithElements)
 	ctx.Step(`^I call AppendNotNil on the slice with the following variable arguments$`, iCallAppendNotNilOnTheSliceWithTheFollowingVariableArguments)
 	ctx.Step(`^I call AppendNotNil on the slice$`, iCallAppendNotNilOnTheSlice)
 	ctx.Step(`^the result should be a string ptr slice with elements$`, theResultShouldBeASliceWithElements)

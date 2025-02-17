@@ -23,7 +23,7 @@ Scenario: Append elements to a slice
     | "f"     |
 
   Scenario: Append non-nil elements to an empty slice
-    Given an empty slice
+    Given an empty string ptr slice
     When I call AppendNotNil on the slice with the following variable arguments
       | "d"     |
       | "e"     |
