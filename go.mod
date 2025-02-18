@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/cucumber/godog v0.15.0
-	golang.org/x/sync v0.10.0
+	golang.org/x/sync v0.11.0
 )
 
 require (
