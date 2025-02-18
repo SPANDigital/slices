@@ -1,36 +1,38 @@
 package slices
 
 import (
-	"reflect"
-	"testing"
+	"context"
+	"errors"
+	"github.com/cucumber/godog"
+	"strings"
 )
 
-func TestMap(t *testing.T) {
-	type args[S interface{ ~[]V }, V any, E any] struct {
-		s       S
-		extract func(V V) E
+func iCallMapOnTheStringsSliceWithTheFunctionThatReturnsTheLengthOfTheString(ctx context.Context) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	type testCase[S interface{ ~[]V }, V any, E any] struct {
-		name string
-		args args[S, V, E]
-		want []E
+	return context.WithValue(ctx, resultKey{}, Map(firstArg, func(s string) int { return len(s) })), nil
+}
+
+func iCallMapOnTheStringSliceWithAFunctionThatAppendsSuffixToEachElement(ctx context.Context) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	tests := []testCase[[]int, int, bool]{
-		{
-			name: "empty",
-			args: args[[]int, int, bool]{
-				s: []int{1, -1, 2, -2, 3, -3},
-				extract: func(v int) bool {
-					return v < 0
-				},
-			},
-			want: []bool{false, true, false, true, false, true}},
+	return context.WithValue(ctx, resultKey{}, Map(firstArg, func(s string) string { return s + "-suffix" })), nil
+}
+
+func iCallMapOnTheStringSliceWithAFunctionThatConvertsEachElementToUppercase(ctx context.Context) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Map(tt.args.s, tt.args.extract); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Map() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	return context.WithValue(ctx, resultKey{}, Map(firstArg, func(s string) string { return strings.ToUpper(s) })), nil
+}
+
+func initializeScenarioForMap(ctx *godog.ScenarioContext) {
+	ctx.Step(`^I call Map on the string slice with a function that appends "\-suffix" to each element$`, iCallMapOnTheStringSliceWithAFunctionThatAppendsSuffixToEachElement)
+	ctx.Step(`^I call Map on the string slice with a function that returns the length of each element$`, iCallMapOnTheStringsSliceWithTheFunctionThatReturnsTheLengthOfTheString)
+	ctx.Step(`^I call Map on the string slice with a function that converts each element to uppercase$`, iCallMapOnTheStringSliceWithAFunctionThatConvertsEachElementToUppercase)
 }

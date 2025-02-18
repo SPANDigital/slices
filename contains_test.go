@@ -1,56 +1,29 @@
 package slices
 
-import "testing"
+import (
+	"context"
+	"errors"
+	"github.com/cucumber/godog"
+)
 
-func TestContains(t *testing.T) {
-	type args[S interface{ ~[]E }, E comparable] struct {
-		s S
-		v E
+func tableToStringSlice(table *godog.Table) []string {
+	var out []string
+	for _, row := range table.Rows {
+		for _, cell := range row.Cells {
+			out = append(out, cell.Value)
+		}
 	}
-	type testCase[S interface{ ~[]E }, E comparable] struct {
-		name string
-		args args[S, E]
-		want bool
+	return out
+}
+func theContainsFunctionIsCalledWithStringArgument(ctx context.Context, arg string) (context.Context, error) {
+	firstArg, ok := ctx.Value(firstArgKey{}).([]string)
+	if !ok {
+		return ctx, errors.New("first arg not found in context")
 	}
-	tests := []testCase[[]string, string]{
-		{
-			name: "present-at-0",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "a",
-			},
-			want: true,
-		},
-		{
-			name: "present-at-1",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "b",
-			},
-			want: true,
-		},
-		{
-			name: "present-at-2",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "c",
-			},
-			want: true,
-		},
-		{
-			name: "not-present",
-			args: args[[]string, string]{
-				s: []string{"a", "b", "c"},
-				v: "z",
-			},
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Contains(tt.args.s, tt.args.v); got != tt.want {
-				t.Errorf("Contains() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	result := Contains(firstArg, arg)
+	return context.WithValue(ctx, resultKey{}, result), nil
+}
+
+func initializeScenarioForContains(ctx *godog.ScenarioContext) {
+	ctx.Step(`^I call Contains with argument "([^"]*)"$`, theContainsFunctionIsCalledWithStringArgument)
 }
