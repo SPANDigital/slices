@@ -312,6 +312,17 @@ func anEmptySliceOfIntegers(ctx context.Context) (context.Context, error) {
 	return context.WithValue(ctx, firstArgKey{}, []int{}), nil
 }
 
+func theResultShouldBeAnEmptySliceOfIntegers(ctx context.Context) (context.Context, error) {
+	result, ok := ctx.Value(resultKey{}).([]int)
+	if !ok {
+		return ctx, errors.New("result not found in context")
+	}
+	if len(result) != 0 {
+		return ctx, errors.New("result is not empty")
+	}
+	return ctx, nil
+}
+
 func initializeSharedSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^a string slice with elements$`, aStringSliceWithElements)
 	ctx.Step(`^a string slice$`, aStringSliceWithElements)
@@ -332,6 +343,7 @@ func initializeSharedSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the result should be a slice of integers$`, theResultShouldBeASliceOfIntegers)
 	ctx.Step(`^the result should be a map of integer keys and integer values$`, theResultShouldBeAMapOfIntegerKeysAndIntegerValues)
 	ctx.Step(`^a slice of integers$`, aSliceOfIntegers)
+	ctx.Step(`^the result should be an empty slice of integers$`, theResultShouldBeAnEmptySliceOfIntegers)
 }
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
@@ -347,6 +359,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	initializeScenarioForMap(ctx)
 	initializeScenarioForMapFrom(ctx)
 	initializeScenarioForNumPages(ctx)
+	initializeScenarioForPaging(ctx)
+	initializeScenarioForSyncMap(ctx)
+	initializeScenarioForUnique(ctx)
 }
 
 func TestFeatures(t *testing.T) {
