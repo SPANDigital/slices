@@ -237,21 +237,101 @@ func theResultShouldBeAnEmptyStringSlice(ctx context.Context) (context.Context, 
 	return ctx, nil
 }
 
+func theResultShouldBeASliceOfIntegers(ctx context.Context, compare *godog.Table) (context.Context, error) {
+	result, ok := ctx.Value(resultKey{}).([]int)
+	if !ok {
+		return ctx, errors.New("result not found in context")
+	}
+	expected, err := tableToIntegerSlice(compare)
+	if err != nil {
+		return ctx, err
+	}
+	if len(result) != len(expected) {
+		return ctx, errors.New("result length does not match expected length")
+	}
+	for i := range result {
+		if result[i] != expected[i] {
+			return ctx, fmt.Errorf("value mismatch at index %d expected %d got %d", i, expected[i], result[i])
+		}
+	}
+	return ctx, nil
+}
+
+func anEmptyStringSlice(ctx context.Context) (context.Context, error) {
+	return context.WithValue(ctx, firstArgKey{}, []string{}), nil
+}
+
+func tableToIntegerMap(table *godog.Table) (map[int]int, error) {
+	out := make(map[int]int)
+	for _, row := range table.Rows {
+		if len(row.Cells) != 2 {
+			return nil, errors.New("table must have exactly two columns")
+		}
+		key, err := strconv.Atoi(row.Cells[0].Value)
+		if err != nil {
+			return nil, err
+		}
+		value, err := strconv.Atoi(row.Cells[1].Value)
+		if err != nil {
+			return nil, err
+		}
+		out[key] = value
+	}
+	return out, nil
+}
+
+func theResultShouldBeAMapOfIntegerKeysAndIntegerValues(ctx context.Context, expected *godog.Table) (context.Context, error) {
+	e, err := tableToIntegerMap(expected)
+	if err != nil {
+		return ctx, err
+	}
+	result, ok := ctx.Value(resultKey{}).(map[int]int)
+	if !ok {
+		return ctx, errors.New("result not found in context")
+	}
+	if len(result) != len(e) {
+		return ctx, errors.New("result length does not match expected length")
+	}
+	for k, v := range e {
+		if result[k] != v {
+			return ctx, errors.New("value mismatch")
+		}
+	}
+	return ctx, nil
+}
+
+func aSliceOfIntegers(ctx context.Context, elements *godog.Table) (context.Context, error) {
+	sl, err := tableToIntegerSlice(elements)
+	if err != nil {
+		return ctx, err
+	}
+	return context.WithValue(ctx, firstArgKey{}, sl), nil
+}
+
+func anEmptySliceOfIntegers(ctx context.Context) (context.Context, error) {
+	return context.WithValue(ctx, firstArgKey{}, []int{}), nil
+}
+
 func initializeSharedSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^a string slice with elements$`, aStringSliceWithElements)
 	ctx.Step(`^a string slice$`, aStringSliceWithElements)
 	ctx.Step(`^a slice of strings with elements$`, aStringSliceWithElements)
+	ctx.Step(`^an empty string slice$`, anEmptyStringSlice)
 	ctx.Step(`^an empty string ptr slice$`, anEmptyStringPtrSlice)
+	ctx.Step(`^an empty slice of integers$`, anEmptySliceOfIntegers)
 	ctx.Step(`^a string ptr slice with elements$`, aStringPtrSliceWithElements)
 	ctx.Step(`^the result should be an empty string ptr slice$`, theResultShouldBeAnEmptyStringPtrSlice)
 	ctx.Step(`^the result should be a slice of string slices with elements$`, theResultShouldBeASliceOfStringSlicesWithElements)
 	ctx.Step(`^the result should be a slice of string slices with elements trim cells on right$`, theResultShouldBeASliceOfStringSlicesWithElementsTrimCellsOnRight)
-	ctx.Step(`^the result should be (\d+)$`, theResultShouldBeInt)
+	ctx.Step(`^the result should be integer (\-?\d+)$`, theResultShouldBeInt)
 	ctx.Step(`^the result should be boolean (\w+)$`, theResultShouldBeBool)
 	ctx.Step(`^the following string slices$`, theFollowingStringSlices)
 	ctx.Step(`^the result should be string slice$`, theResultShouldBeStringSlice)
 	ctx.Step(`^I have (\d+) empty string slices$`, iHaveEmptyStringSlices)
 	ctx.Step(`^the result should be an empty string slice$`, theResultShouldBeAnEmptyStringSlice)
+	ctx.Step(`^the result should be a slice of integers$`, theResultShouldBeASliceOfIntegers)
+	ctx.Step(`^the result should be a map of integer keys and integer values$`, theResultShouldBeAMapOfIntegerKeysAndIntegerValues)
+	ctx.Step(`^a slice of integers$`, aSliceOfIntegers)
 }
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
@@ -264,6 +344,9 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	initializeScenarioForGroupByLen(ctx)
 	initializeScenarioForIndex(ctx)
 	initializeScenarioForIntersection(ctx)
+	initializeScenarioForMap(ctx)
+	initializeScenarioForMapFrom(ctx)
+	initializeScenarioForNumPages(ctx)
 }
 
 func TestFeatures(t *testing.T) {
