@@ -113,7 +113,27 @@ docs: update README with new examples
 
 ## Go Version
 
-This project requires **Go 1.24.0** or later (specified in `go.mod`).
+This project requires **Go 1.25** or later (specified in `go.mod`).
+
+## Deprecation Policy
+
+As the Go standard library evolves, some functions in this library may be superseded by stdlib equivalents. When this happens:
+
+1. Functions are marked as deprecated with clear migration paths in code comments
+2. Deprecated functions remain functional until v1.0.0 to maintain backward compatibility
+3. Documentation is updated to recommend stdlib alternatives with migration examples
+4. Users are given advance notice through release notes and deprecation warnings
+
+### Currently Deprecated (v0.11.0+)
+
+The following functions are deprecated in favor of Go standard library equivalents:
+
+- **`Contains`** → Use `slices.Contains` from the standard library (available since Go 1.21)
+- **`Index`** → Use `slices.Index` from the standard library (available since Go 1.21)
+- **`GroupByLen`** → Use `slices.Chunk` from the standard library (available since Go 1.23)
+  - Note: `slices.Chunk` returns an iterator rather than a materialized slice
+
+These functions will be removed in v1.0.0. See README.md for migration examples.
 
 ## Branch Strategy
 

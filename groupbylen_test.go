@@ -1,5 +1,8 @@
 package slices
 
+// NOTE: The GroupByLen function is deprecated in favor of slices.Chunk from the standard library.
+// Tests are maintained for backward compatibility until v1.0.0.
+
 import (
 	"context"
 	"errors"
