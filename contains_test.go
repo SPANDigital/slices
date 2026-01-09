@@ -1,5 +1,8 @@
 package slices
 
+// NOTE: The Contains function is deprecated in favor of slices.Contains from the standard library.
+// Tests are maintained for backward compatibility until v1.0.0.
+
 import (
 	"context"
 	"errors"

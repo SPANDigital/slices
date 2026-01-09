@@ -1,6 +1,6 @@
 module github.com/spandigital/slices
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/cucumber/godog v0.15.1

@@ -23,7 +23,7 @@ Built with **Go generics**, this library offers:
 go get github.com/spandigital/slices
 ```
 
-**Requirements:** Go 1.24.0 or later
+**Requirements:** Go 1.25 or later
 
 ## Quick Start
 
@@ -53,6 +53,44 @@ func main() {
     // Get unique values
     unique := slices.Unique([]int{1, 2, 2, 3, 3, 3})
     fmt.Println(unique) // [1, 2, 3]
+}
+```
+
+## ⚠️ Deprecation Notice
+
+The following functions are deprecated and will be removed in v1.0.0. Please migrate to the Go standard library equivalents:
+
+| Deprecated Function | Standard Library Replacement | Available Since |
+|-------------------|------------------------------|-----------------|
+| `Contains` | `slices.Contains` | Go 1.21 |
+| `Index` | `slices.Index` | Go 1.21 |
+| `GroupByLen` | `slices.Chunk` | Go 1.23 |
+
+### Migration Examples
+
+For `Contains` and `Index`, simply change the import:
+
+```go
+// Old (deprecated)
+import "github.com/spandigital/slices"
+result := slices.Contains(mySlice, value)
+
+// New (recommended)
+import "slices"
+result := slices.Contains(mySlice, value)
+```
+
+For `GroupByLen`, use the iterator-based `slices.Chunk`:
+
+```go
+// Old (deprecated)
+chunks := slices.GroupByLen(mySlice, 3)
+
+// New (recommended)
+import "slices"
+var chunks [][]int
+for chunk := range slices.Chunk(mySlice, 3) {
+    chunks = append(chunks, chunk)
 }
 ```
 
@@ -97,7 +135,9 @@ clean := slices.RemoveNil(values)
 // Result: [1, "hello", 3.14]
 ```
 
-#### `Contains[S ~[]E, E comparable](s S, v E) bool`
+#### `Contains[S ~[]E, E comparable](s S, v E) bool` ⚠️ Deprecated
+
+**Deprecated:** Use `slices.Contains` from the standard library instead. This function will be removed in v1.0.0.
 
 Check if a slice contains a specific value.
 
@@ -106,7 +146,9 @@ hasValue := slices.Contains([]int{1, 2, 3, 4, 5}, 3) // true
 noValue := slices.Contains([]string{"foo", "bar"}, "baz") // false
 ```
 
-#### `Index[S ~[]E, E comparable](s S, v E) int`
+#### `Index[S ~[]E, E comparable](s S, v E) int` ⚠️ Deprecated
+
+**Deprecated:** Use `slices.Index` from the standard library instead. This function will be removed in v1.0.0.
 
 Find the index of a value in a slice. Returns -1 if not found.
 
@@ -226,7 +268,9 @@ byAge := slices.GroupBy(people, func(p Person) int {
 // }
 ```
 
-#### `GroupByLen[S ~[]V, V any](input S, length int) [][]V`
+#### `GroupByLen[S ~[]V, V any](input S, length int) [][]V` ⚠️ Deprecated
+
+**Deprecated:** Use `slices.Chunk` from the standard library instead. This function will be removed in v1.0.0. Note that `slices.Chunk` returns an iterator, not a materialized slice.
 
 Split a slice into chunks of a specified length.
 
