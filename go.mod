@@ -1,10 +1,10 @@
 module github.com/spandigital/slices
 
-go 1.25
+go 1.25.0
 
 require (
 	github.com/cucumber/godog v0.15.1
-	golang.org/x/sync v0.19.0
+	golang.org/x/sync v0.20.0
 )
 
 require (
